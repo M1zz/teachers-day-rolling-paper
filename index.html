@@ -3,1214 +3,284 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>스승의 날 롤링페이퍼</title>
+  <title>Special Pages</title>
   <style>
     :root {
-      --paper: #f2f2f2;
       --ink: #080808;
-      --soft-ink: #333333;
-      --line: #0b0b0b;
-      --muted: #e4e4e4;
       --white: #ffffff;
-      --shadow: rgba(0, 0, 0, 0.24);
-      --pixel-font: "Courier New", "DungGeunMo", "Galmuri11", monospace;
+      --muted: #e4e4e4;
+      --soft: #f2f2f2;
+      --pixel-font: "Courier New", monospace;
       --korean-font: "Pretendard", "Noto Sans KR", "Apple SD Gothic Neo", sans-serif;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      margin: 0;
       min-height: 100vh;
       background:
-        radial-gradient(circle at 18px 18px, rgba(0, 0, 0, 0.035) 1px, transparent 1px) 0 0 / 28px 28px,
+        radial-gradient(circle at 18px 18px, rgba(0,0,0,0.04) 1px, transparent 1px)
+        0 0 / 28px 28px,
         #d7d7d7;
       color: var(--ink);
       font-family: var(--korean-font);
     }
 
-    .toolbar {
-      position: sticky;
-      top: 0;
-      z-index: 10;
+    /* ── Header ── */
+    header {
       display: grid;
-      grid-template-columns: 1fr auto auto;
-      gap: 12px;
-      align-items: center;
-      padding: 12px 18px;
-      border-bottom: 3px solid var(--ink);
-      background: var(--white);
-      box-shadow: 0 4px 0 rgba(0, 0, 0, 0.12);
+      place-items: center;
+      padding: 56px 24px 40px;
+      text-align: center;
     }
 
-    .toolbar-title {
-      min-width: 0;
+    .site-label {
+      display: inline-block;
+      margin-bottom: 18px;
+      padding: 6px 16px;
+      border: 3px solid var(--ink);
+      background: var(--ink);
+      color: var(--white);
       font-family: var(--pixel-font);
+      font-size: 13px;
       font-weight: 900;
-      letter-spacing: 0;
-      line-height: 1.2;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
     }
 
-    .toolbar-title small {
-      display: block;
-      margin-top: 4px;
+    h1 {
+      font-family: var(--pixel-font);
+      font-size: clamp(36px, 8vw, 72px);
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: -0.01em;
+      text-transform: uppercase;
+    }
+
+    .header-sub {
+      margin-top: 14px;
       color: #555;
-      font-family: var(--korean-font);
-      font-size: 12px;
+      font-size: 15px;
       font-weight: 600;
     }
 
-    .file-label,
-    .print-button {
-      display: inline-flex;
-      min-height: 40px;
-      align-items: center;
-      justify-content: center;
-      padding: 0 14px;
+    /* ── Grid ── */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 24px;
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+
+    /* ── Card ── */
+    .card {
+      display: grid;
+      grid-template-rows: auto 1fr auto;
       border: 3px solid var(--ink);
+      border-radius: 16px;
       background: var(--white);
-      color: var(--ink);
-      font-family: var(--pixel-font);
-      font-size: 14px;
-      font-weight: 900;
-      cursor: pointer;
+      box-shadow: 8px 8px 0 var(--ink);
+      overflow: hidden;
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.08s, box-shadow 0.08s;
+    }
+
+    .card:hover {
+      transform: translate(-3px, -3px);
+      box-shadow: 11px 11px 0 var(--ink);
+    }
+
+    .card:active {
+      transform: translate(4px, 4px);
       box-shadow: 4px 4px 0 var(--ink);
     }
 
-    .file-label:active,
-    .print-button:active {
-      transform: translate(3px, 3px);
-      box-shadow: 1px 1px 0 var(--ink);
-    }
-
-    #dataUpload {
-      position: absolute;
-      inline-size: 1px;
-      block-size: 1px;
-      overflow: hidden;
-      clip: rect(0 0 0 0);
-      white-space: nowrap;
-    }
-
-    .page-wrap {
+    .card-header {
       display: grid;
-      place-items: center;
-      padding: 12px 12px 32px;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      padding: 12px 16px;
+      border-bottom: 3px solid var(--ink);
+      background: var(--muted);
     }
 
-    .poster {
-      position: relative;
-      width: 100%;
-      max-width: none;
-      aspect-ratio: 3 / 4.18;
-      overflow: hidden;
-      border: 4px solid var(--ink);
-      border-radius: 34px;
-      background:
-        linear-gradient(90deg, rgba(0, 0, 0, 0.02) 50%, transparent 50%) 0 0 / 18px 18px,
-        linear-gradient(rgba(0, 0, 0, 0.025) 50%, transparent 50%) 0 0 / 18px 18px,
-        var(--paper);
-      box-shadow: 18px 18px 0 rgba(0, 0, 0, 0.18);
-      isolation: isolate;
+    .card-tag {
+      font-family: var(--pixel-font);
+      font-size: 13px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
     }
 
-    .poster::before {
-      content: "";
-      position: absolute;
-      inset: 74px 0 74px;
-      z-index: -1;
-      background:
-        linear-gradient(90deg, transparent 0 94%, rgba(0, 0, 0, 0.08) 94% 100%) 0 0 / 42px 42px,
-        linear-gradient(0deg, transparent 0 94%, rgba(0, 0, 0, 0.08) 94% 100%) 0 0 / 42px 42px;
-      opacity: 0.28;
+    .card-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 2px solid var(--ink);
+      background: var(--ink);
     }
 
-    .top-band,
-    .bottom-band {
-      position: absolute;
-      left: 0;
-      right: 0;
-      z-index: 3;
-      display: grid;
-      place-items: center;
+    .card-body {
+      padding: 24px 20px 20px;
+    }
+
+    .card-emoji {
+      font-size: 40px;
+      line-height: 1;
+      margin-bottom: 14px;
+      display: block;
+    }
+
+    .card-title {
+      font-family: var(--pixel-font);
+      font-size: clamp(18px, 3vw, 22px);
+      font-weight: 900;
+      line-height: 1.15;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .card-desc {
+      font-size: 14px;
+      font-weight: 600;
+      color: #444;
+      line-height: 1.55;
+      word-break: keep-all;
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 20px;
+      border-top: 3px solid var(--ink);
+      background: var(--soft);
+    }
+
+    .card-date {
+      font-family: var(--pixel-font);
+      font-size: 12px;
+      font-weight: 900;
+      color: #555;
+    }
+
+    .card-arrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border: 2px solid var(--ink);
       background: var(--ink);
       color: var(--white);
       font-family: var(--pixel-font);
+      font-size: 13px;
       font-weight: 900;
-      text-align: center;
-      text-transform: uppercase;
     }
 
-    .top-band {
-      top: 0;
-      height: 78px;
-      font-size: clamp(20px, 4vw, 36px);
-      letter-spacing: 0;
+    /* ── Coming Soon card ── */
+    .card.soon {
+      opacity: 0.55;
+      pointer-events: none;
     }
 
-    .bottom-band {
-      bottom: 0;
-      min-height: 78px;
-      padding: 14px 54px;
-      font-size: clamp(14px, 2.6vw, 24px);
-      line-height: 1.28;
-    }
-
-    .subtitle-line {
-      display: block;
-      margin-top: 4px;
-      color: #eeeeee;
-      font-family: var(--korean-font);
-      font-size: clamp(11px, 1.6vw, 15px);
-      font-weight: 800;
-    }
-
-    .hero-bubble {
-      position: absolute;
-      top: 128px;
-      left: 44px;
-      z-index: 5;
-      width: min(52%, 485px);
-      min-height: 118px;
-      display: grid;
-      place-items: center;
-      padding: 20px 42px 30px;
-      border: 12px solid var(--ink);
-      background: var(--white);
-      box-shadow: 18px 18px 0 rgba(0, 0, 0, 0.24);
-      clip-path: polygon(
-        0 18px, 18px 18px, 18px 0,
-        calc(100% - 30px) 0, calc(100% - 30px) 18px, 100% 18px,
-        100% calc(100% - 42px), calc(69% + 34px) calc(100% - 42px),
-        calc(69% + 34px) 100%, calc(69% - 10px) calc(100% - 42px),
-        0 calc(100% - 42px)
+    .card.soon .card-header {
+      background: repeating-linear-gradient(
+        -45deg,
+        var(--muted) 0 8px,
+        var(--soft) 8px 16px
       );
     }
 
-    .hero-bubble h1 {
-      margin: 0;
-      font-family: var(--pixel-font);
-      font-size: clamp(34px, 6vw, 58px);
-      font-weight: 900;
-      letter-spacing: 0;
-      line-height: 0.98;
-      text-align: center;
-      text-transform: uppercase;
+    .card.soon .card-dot {
+      background: transparent;
     }
 
-    .hero-bubble span {
-      display: block;
-      margin-top: 8px;
-      font-family: var(--korean-font);
-      font-size: clamp(13px, 2vw, 18px);
-      font-weight: 900;
-      line-height: 1.15;
-    }
-
-    .messages {
-      position: absolute;
-      inset: 90px 24px 92px;
-      z-index: 4;
-    }
-
-    .note {
-      position: absolute;
-      display: grid;
-      grid-template-rows: 34px 1fr;
-      width: var(--w);
-      min-height: var(--h);
-      border: 3px solid var(--line);
-      border-radius: 12px;
-      background: var(--white);
-      box-shadow: 10px 10px 0 rgba(0, 0, 0, 0.16);
-      transform: rotate(var(--r));
-    }
-
-    .note:nth-child(2n) {
-      box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.12);
-    }
-
-    .note-titlebar {
-      display: grid;
-      grid-template-columns: 1fr 36px;
-      align-items: center;
-      border-bottom: 3px solid var(--line);
-      background: var(--muted);
-      border-radius: 9px 9px 0 0;
-      font-family: var(--pixel-font);
-      font-size: clamp(14px, 1.7vw, 20px);
-      font-weight: 900;
-      line-height: 1;
-    }
-
-    .note-titlebar span {
-      padding-left: 13px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .close {
-      position: relative;
-      height: 100%;
-      border-left: 3px solid var(--line);
-    }
-
-    .close::before,
-    .close::after {
-      content: "";
-      position: absolute;
-      top: 14px;
-      left: 7px;
-      width: 22px;
-      height: 3px;
-      background: var(--line);
-    }
-
-    .close::before {
-      transform: rotate(45deg);
-    }
-
-    .close::after {
-      transform: rotate(-45deg);
-    }
-
-    .note-body {
-      position: relative;
-      display: grid;
-      grid-template-columns: 1fr 28px;
-      gap: 12px;
-      min-height: 138px;
-      padding: 24px 0 20px 28px;
-      background: var(--white);
-      border-radius: 0 0 9px 9px;
-    }
-
-    .note-body::after {
-      content: "";
-      position: absolute;
-      top: 0;
-      right: 27px;
-      bottom: 0;
-      width: 3px;
-      background: var(--line);
-    }
-
-    .scrollbar {
-      position: relative;
-      z-index: 1;
-      border-left: 0;
-      background:
-        linear-gradient(var(--line), var(--line)) 0 27% / 100% 3px no-repeat,
-        linear-gradient(var(--line), var(--line)) 0 74% / 100% 3px no-repeat;
-    }
-
-    .message {
-      min-width: 0;
-      padding-right: 12px;
-    }
-
-    .name-tag {
+    .soon-badge {
       display: inline-block;
-      max-width: 100%;
-      margin-bottom: 10px;
-      padding: 4px 8px;
-      overflow: hidden;
-      background: var(--ink);
-      color: var(--white);
+      margin-top: 12px;
+      padding: 4px 10px;
+      border: 2px solid var(--ink);
       font-family: var(--pixel-font);
-      font-size: clamp(12px, 1.5vw, 15px);
+      font-size: 11px;
       font-weight: 900;
-      line-height: 1.15;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
     }
 
-    .message p {
-      margin: 0;
-      color: var(--soft-ink);
-      font-size: clamp(12px, 1.55vw, 15px);
-      font-weight: 700;
-      line-height: 1.46;
-      white-space: pre-line;
-      word-break: keep-all;
-      overflow-wrap: anywhere;
-    }
-
-    .placeholder-line {
-      display: block;
-      height: 8px;
-      margin: 8px 0;
-      background:
-        linear-gradient(90deg, rgba(0, 0, 0, 0.34), rgba(0, 0, 0, 0.11));
-    }
-
-    .decor {
-      position: absolute;
-      z-index: 2;
-      color: var(--ink);
-      font-family: var(--pixel-font);
-      font-weight: 900;
-      line-height: 1;
-      pointer-events: none;
-      user-select: none;
-    }
-
-    .decor.music {
-      top: 178px;
-      right: 104px;
-      font-size: clamp(62px, 8vw, 94px);
-      transform: rotate(10deg);
-    }
-
-    .decor.music.alt {
-      top: 34%;
-      left: 8%;
-      font-size: clamp(42px, 5vw, 70px);
-      transform: rotate(-18deg);
-      text-shadow: 5px 5px 0 rgba(0, 0, 0, 0.18);
-    }
-
-    .decor.music.mini {
-      top: 57%;
-      right: 8%;
-      font-size: clamp(36px, 4vw, 58px);
-      transform: rotate(23deg);
-      text-shadow: 4px 4px 0 rgba(0, 0, 0, 0.16);
-    }
-
-    .decor.cursor {
-      right: 88px;
-      bottom: 358px;
-      width: 64px;
-      height: 94px;
-      transform: rotate(-24deg);
+    /* ── Footer ── */
+    footer {
+      padding: 28px 24px;
+      text-align: center;
+      border-top: 3px solid var(--ink);
       background: var(--white);
-      clip-path: polygon(0 0, 0 100%, 22% 77%, 38% 100%, 55% 91%, 39% 68%, 72% 68%);
-      filter: drop-shadow(4px 4px 0 var(--ink));
-    }
-
-    .decor.heart {
-      right: 206px;
-      bottom: 304px;
-      font-size: clamp(42px, 6vw, 68px);
-      transform: rotate(-10deg);
-      text-shadow: 6px 6px 0 rgba(0, 0, 0, 0.2);
-    }
-
-    .decor.heart.alt {
-      top: 67%;
-      left: 66%;
-      right: auto;
-      bottom: auto;
-      font-size: clamp(44px, 5vw, 76px);
-      transform: rotate(12deg);
-    }
-
-    .decor.heart.mini {
-      top: 37%;
-      left: 18%;
-      right: auto;
-      bottom: auto;
-      font-size: clamp(28px, 3vw, 44px);
-      transform: rotate(-22deg);
-      text-shadow: 4px 4px 0 rgba(0, 0, 0, 0.16);
-    }
-
-    .decor.apple-logo {
-      top: 24%;
-      right: 17%;
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", var(--pixel-font);
-      font-size: clamp(48px, 6vw, 92px);
-      transform: rotate(-8deg);
-      text-shadow: 7px 7px 0 rgba(0, 0, 0, 0.18);
-    }
-
-    .decor.hourglass {
-      top: 482px;
-      right: 142px;
-      width: 64px;
-      height: 82px;
-      border-top: 9px solid var(--ink);
-      border-bottom: 9px solid var(--ink);
-      transform: rotate(19deg);
-    }
-
-    .decor.hourglass::before,
-    .decor.hourglass::after {
-      content: "";
-      position: absolute;
-      left: 12px;
-      width: 40px;
-      height: 40px;
-      border-left: 8px solid var(--ink);
-      border-bottom: 8px solid var(--ink);
-    }
-
-    .decor.hourglass::before {
-      top: 0;
-      transform: rotate(-45deg);
-    }
-
-    .decor.hourglass::after {
-      bottom: 0;
-      transform: rotate(135deg);
-    }
-
-    .decor.hand {
-      left: 66px;
-      top: 412px;
-      width: 74px;
-      height: 50px;
-      border: 7px solid var(--ink);
-      background: var(--white);
-      transform: rotate(24deg);
-      clip-path: polygon(14% 18%, 50% 18%, 50% 0, 67% 0, 67% 18%, 82% 18%, 82% 78%, 18% 78%, 18% 54%, 0 54%, 0 35%, 14% 35%);
-      filter: drop-shadow(6px 6px 0 rgba(0, 0, 0, 0.14));
-    }
-
-    .stamp {
-      position: absolute;
-      right: 84px;
-      bottom: 88px;
-      z-index: 4;
-      display: inline-grid;
-      grid-template-columns: 32px auto;
-      gap: 10px;
-      align-items: center;
-      font-family: var(--korean-font);
-      font-size: 14px;
-      font-weight: 900;
-    }
-
-    .stamp-mark {
-      display: grid;
-      width: 32px;
-      height: 32px;
-      place-items: center;
-      border-radius: 50%;
-      background: var(--ink);
-      color: var(--white);
       font-family: var(--pixel-font);
-      font-size: 18px;
+      font-size: 13px;
+      font-weight: 900;
+      color: #666;
     }
 
-    @media (max-width: 760px) {
-      .toolbar {
-        grid-template-columns: 1fr;
-      }
-
-      .file-label,
-      .print-button {
-        width: 100%;
-      }
-
-      .page-wrap {
-        padding: 10px 6px 28px;
-      }
-
-      .poster {
-        aspect-ratio: auto;
-        min-height: 2200px;
-        border-radius: 22px;
-        box-shadow: 10px 10px 0 rgba(0, 0, 0, 0.18);
-      }
-
-      .top-band {
-        height: 58px;
-      }
-
-      .bottom-band {
-        min-height: 58px;
-        padding: 10px 24px;
-      }
-
-      .messages {
-        inset: 118px 12px 132px;
-      }
-
-      .hero-bubble {
-        top: 86px;
-        left: 24px;
-        width: 62%;
-        min-height: 86px;
-        padding: 14px 18px 20px;
-        border-width: 8px;
-        box-shadow: 10px 10px 0 rgba(0, 0, 0, 0.2);
-      }
-
-      .note {
-        left: 4% !important;
-        top: var(--mobile-top) !important;
-        width: 92% !important;
-        height: auto !important;
-        min-height: 156px !important;
-        grid-template-rows: 26px 1fr;
-        border-width: 2px;
-        border-radius: 8px;
-        box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.16);
-        transform: none;
-      }
-
-      .note-titlebar {
-        grid-template-columns: 1fr 28px;
-        border-bottom-width: 2px;
-        border-radius: 6px 6px 0 0;
-      }
-
-      .note-titlebar span {
-        padding-left: 8px;
-      }
-
-      .close {
-        border-left-width: 2px;
-      }
-
-      .close::before,
-      .close::after {
-        top: 11px;
-        left: 6px;
-        width: 16px;
-        height: 2px;
-      }
-
-      .note-body {
-        grid-template-columns: 1fr 18px;
-        gap: 6px;
-        min-height: 126px;
-        padding: 12px 0 10px 12px;
-      }
-
-      .note-body::after {
-        right: 17px;
-        width: 2px;
-      }
-
-      .name-tag {
-        margin-bottom: 5px;
-        padding: 3px 5px;
-      }
-
-      .message p {
-        line-height: 1.35;
-      }
-
-      .decor.music {
-        right: 44px;
-      }
-
-      .decor.music.alt {
-        top: 38%;
-        left: 8%;
-      }
-
-      .decor.music.mini {
-        right: 6%;
-      }
-
-      .decor.apple-logo {
-        top: 25%;
-        right: 12%;
-      }
-
-      .decor.cursor,
-      .decor.hand {
-        display: none;
-      }
-
-      .stamp {
-        right: 28px;
-        bottom: 78px;
-        transform: scale(0.76);
-        transform-origin: right bottom;
-      }
-    }
-
-    @media print {
-      @page {
-        size: A4 portrait;
-        margin: 0;
-      }
-
-      body {
-        background: #ffffff;
-      }
-
-      .toolbar {
-        display: none;
-      }
-
-      .page-wrap {
-        display: block;
-        padding: 0;
-      }
-
-      .poster {
-        width: 210mm;
-        height: 297mm;
-        border-radius: 0;
-        border-width: 0;
-        box-shadow: none;
-      }
-
+    @media (max-width: 520px) {
+      header { padding: 36px 16px 28px; }
+      .grid  { padding: 0 14px 56px; gap: 16px; }
     }
   </style>
 </head>
 <body>
-  <main class="page-wrap">
-    <section class="poster" aria-label="스승의 날 롤링페이퍼 포스터">
-      <div class="top-band">
-        - THANK YOU NOTES -
-        <span class="subtitle-line">스승의 날 감사 롤링페이퍼</span>
+
+  <header>
+    <span class="site-label">✦ Special Pages ✦</span>
+    <h1>Event<br>Board</h1>
+    <p class="header-sub">특별한 날을 위한 페이지 모음</p>
+  </header>
+
+  <main class="grid">
+
+    <!-- ── 스승의 날 ── -->
+    <a class="card" href="./teachers-day/">
+      <div class="card-header">
+        <span class="card-tag">Rolling Paper</span>
+        <span class="card-dot"></span>
       </div>
-
-      <div class="hero-bubble">
-        <h1>
-          THANK YOU
-          <span>리이오에게 보내는 마음</span>
-        </h1>
+      <div class="card-body">
+        <span class="card-emoji">🍎</span>
+        <p class="card-title">Teacher's<br>Day</p>
+        <p class="card-desc">
+          스승의 날을 맞아 감사한 마음을 담아 만든 롤링페이퍼입니다.
+          크루원들의 따뜻한 메시지가 한 장에 담겨 있습니다.
+        </p>
       </div>
-
-      <div class="decor music" aria-hidden="true">♪</div>
-      <div class="decor music alt" aria-hidden="true">♫</div>
-      <div class="decor music mini" aria-hidden="true">♪</div>
-      <div class="decor hand" aria-hidden="true"></div>
-      <div class="decor hourglass" aria-hidden="true"></div>
-      <div class="decor cursor" aria-hidden="true"></div>
-      <div class="decor heart" aria-hidden="true">♥</div>
-      <div class="decor heart alt" aria-hidden="true">♥</div>
-      <div class="decor heart mini" aria-hidden="true">♥</div>
-      <div class="decor apple-logo" aria-hidden="true"></div>
-
-      <div class="messages" id="messages">
-        <article class="note" style="left:23%; top:24%; --w:35%; --h:14%; --r:-0.6deg;">
-          <div class="note-titlebar">
-            <span>NEW MESSAGE</span>
-            <i class="close" aria-hidden="true"></i>
-          </div>
-          <div class="note-body">
-            <div class="message">
-              <strong class="name-tag">이름 입력 예정, 학급/소속</strong>
-              <p>선생님께 전하고 싶은 감사 메시지가 이곳에 들어갑니다. 나중에 JSON 또는 CSV로 이름과 내용을 업로드할 수 있습니다.</p>
-            </div>
-            <div class="scrollbar" aria-hidden="true"></div>
-          </div>
-        </article>
-
-        <article class="note" style="left:59%; top:31%; --w:35%; --h:14%; --r:0.5deg;">
-          <div class="note-titlebar">
-            <span>NEW MESSAGE</span>
-            <i class="close" aria-hidden="true"></i>
-          </div>
-          <div class="note-body">
-            <div class="message">
-              <strong class="name-tag">이름 입력 예정, 학급/소속</strong>
-              <p>수업 시간에 기억에 남았던 순간, 고마웠던 말, 선생님 덕분에 배운 점을 적는 칸입니다.</p>
-            </div>
-            <div class="scrollbar" aria-hidden="true"></div>
-          </div>
-        </article>
-
-        <article class="note" style="left:6%; top:42%; --w:35%; --h:14%; --r:-0.3deg;">
-          <div class="note-titlebar">
-            <span>NEW MESSAGE</span>
-            <i class="close" aria-hidden="true"></i>
-          </div>
-          <div class="note-body">
-            <div class="message">
-              <strong class="name-tag">이름 입력 예정, 학급/소속</strong>
-              <p>아직 내용이 없어도 전체 디자인을 먼저 볼 수 있도록 예시 문구를 넣어두었습니다.</p>
-            </div>
-            <div class="scrollbar" aria-hidden="true"></div>
-          </div>
-        </article>
-
-        <article class="note" style="left:47%; top:49%; --w:37%; --h:13%; --r:0.4deg;">
-          <div class="note-titlebar">
-            <span>NEW MESSAGE</span>
-            <i class="close" aria-hidden="true"></i>
-          </div>
-          <div class="note-body">
-            <div class="message">
-              <strong class="name-tag">이름 입력 예정, 학급/소속</strong>
-              <p>메시지가 길어지면 카드 안에서 자연스럽게 줄바꿈됩니다. 인쇄 전 글자 길이를 확인하면 됩니다.</p>
-            </div>
-            <div class="scrollbar" aria-hidden="true"></div>
-          </div>
-        </article>
-
-        <article class="note" style="left:22%; top:63%; --w:35%; --h:13%; --r:0.6deg;">
-          <div class="note-titlebar">
-            <span>NEW MESSAGE</span>
-            <i class="close" aria-hidden="true"></i>
-          </div>
-          <div class="note-body">
-            <div class="message">
-              <strong class="name-tag">이름 입력 예정, 학급/소속</strong>
-              <p>선생님, 늘 따뜻하게 알려주셔서 감사합니다. 이 문장은 업로드 데이터로 교체됩니다.</p>
-            </div>
-            <div class="scrollbar" aria-hidden="true"></div>
-          </div>
-        </article>
-
-        <article class="note" style="left:60%; top:67%; --w:34%; --h:12%; --r:-0.4deg;">
-          <div class="note-titlebar">
-            <span>NEW MESSAGE</span>
-            <i class="close" aria-hidden="true"></i>
-          </div>
-          <div class="note-body">
-            <div class="message">
-              <strong class="name-tag">이름 입력 예정, 학급/소속</strong>
-              <p>함께 적은 롤링페이퍼가 한 장의 추억으로 남도록 흑백 픽셀 노트 스타일로 구성했습니다.</p>
-            </div>
-            <div class="scrollbar" aria-hidden="true"></div>
-          </div>
-        </article>
-
-        <article class="note" style="left:8%; top:80%; --w:35%; --h:10%; --r:-0.2deg;">
-          <div class="note-titlebar">
-            <span>NEW MESSAGE</span>
-            <i class="close" aria-hidden="true"></i>
-          </div>
-          <div class="note-body">
-            <div class="message">
-              <strong class="name-tag">이름 입력 예정, 학급/소속</strong>
-              <p>각 카드의 이름표에는 작성자와 반 또는 팀 이름이 함께 들어갑니다.</p>
-            </div>
-            <div class="scrollbar" aria-hidden="true"></div>
-          </div>
-        </article>
-
-        <article class="note" style="left:47%; top:82%; --w:37%; --h:10%; --r:0.4deg;">
-          <div class="note-titlebar">
-            <span>NEW MESSAGE</span>
-            <i class="close" aria-hidden="true"></i>
-          </div>
-          <div class="note-body">
-            <div class="message">
-              <strong class="name-tag">이름 입력 예정, 학급/소속</strong>
-              <p>내용 업로드 전에는 이 예시 카드들이 자리 잡기용으로 표시됩니다.</p>
-            </div>
-            <div class="scrollbar" aria-hidden="true"></div>
-          </div>
-        </article>
+      <div class="card-footer">
+        <span class="card-date">2025.05.15</span>
+        <span class="card-arrow">열기 →</span>
       </div>
+    </a>
 
-      <div class="stamp" aria-label="제작 표시">
-        <span class="stamp-mark">T</span>
-        <span>Teacher's Day</span>
+    <!-- ── 다음 이벤트 자리 ── -->
+    <div class="card soon">
+      <div class="card-header">
+        <span class="card-tag">Coming Soon</span>
+        <span class="card-dot"></span>
       </div>
+      <div class="card-body">
+        <span class="card-emoji">📅</span>
+        <p class="card-title">Next<br>Event</p>
+        <p class="card-desc">다음 특별한 날을 위한 페이지가 여기에 추가됩니다.</p>
+        <span class="soon-badge">준비 중</span>
+      </div>
+      <div class="card-footer">
+        <span class="card-date">TBD</span>
+        <span class="card-arrow">준비 중</span>
+      </div>
+    </div>
 
-      <div class="bottom-band">
-        We captured our gratitude for your mentoring on this page.
-        <span class="subtitle-line">멘토링에 대한 감사함을 한 장에 담아보았습니다.</span>
-      </div>
-    </section>
   </main>
 
-  <script>
-    const BASE_CARD_COUNT = 8;
+  <footer>
+    SPECIAL PAGES — Made with ♥
+  </footer>
 
-    const filledMessages = [
-      {
-        name: "로렌스",
-        team: "",
-        message: "리이오!\n제가 아카데미에 잘 적응할 수 있게 많은 도움을 주셔서 감사해요!\n리이오 아녔으면..힘들었을 것 같아요!\n앞으로도 더 자주 찾아뵙고 더 많은 이야기해요!\n스승의 은혜는 하늘 같아서~🎶"
-      },
-      {
-        name: "퓨라",
-        team: "",
-        message: "아카데미에서 스스로 자신을 꺼내볼 수 있게 도와주셔서 항상 감사드립니다.\n수료하는 그날까지 더 많은 이야기를 나눌 수 있으면 좋겠습니다."
-      },
-      {
-        name: "주키",
-        team: "",
-        message: "리이오 없는 애플 아카데미… 못 다녀요… 출장 가신다는 소식을 듣고 너무 우울해져서… 빵 샀어요..ㅋㅋ\n얕은 고민부터 깊이 있는 이야기까지 리이오와 함께 나눌 수 있어서 좋았습니다! 리이오와 함께하는 시간들은 절대 잊지 못 할 것 같아요 ㅎㅎ 앞으로도 더 많은 추억과 이야기 함께 나누고 싶습니다! 리이오 정말 감사해요~\nP.S. 내 퍼스널 멘토가 리이오랑 햄벅.허다. 🫰"
-      },
-      {
-        name: "아만",
-        team: "",
-        message: "언제나 질문에 대한 내용 친절하게 답변해 주셔서 감사합니다.\n수료까지 잘 달려 보도록 할게요."
-      },
-      {
-        name: "크리스",
-        team: "",
-        message: "안녕하세요 리이오. 항상 도움 주셔서 감사합니다.\n따뜻하지만 조곤조곤 팩트를 던져주신 덕분에 제 멘탈과 앞날이 창창해질 수 있는 것 같아요. 방황하는 절 옳은 길로 데려가주시는 리이오 항상 감사합니다~~~~"
-      },
-      {
-        name: "니야",
-        team: "",
-        message: "스승의 은혜는 하늘 같아서~~ 우러러 보오올수록 높아만지네~~\n리이오 항상 감사합니다!!! 제 마음 아시죠 찡긋\n처음 아카데미에 들어와서 멘토 소개 시간을 가질 때 아 저 분이 멘토였으면 좋겠다!! 했는데\n그게 바로 리이오였습니다 (no cap)\n제 여러 고민을 나누면서 덕분에 성장하게 되는 것 같아요 든든한 버팀목이 되어주셔서 감사합니다 ^__^\n남은 아카데미 생활 고난과 역경이 있겠지만 두렵지 않습니다 왜? 리이오가 있으니깐요..\n여러 인사이트를 공유해주시고 제가 이해하기 쉽게 설명해주셔서 너무 좋습니다\n앞으로도 잘 부탁드립니다 @--^———-"
-      },
-      {
-        name: "쓔",
-        team: "",
-        message: "(리이오!!! 저 쓔에요!! 리이오가 저희 크루 멘토님이셔서 아휴 정말 행복합니다.. 말씀드리진 못했지만! 전 리이이이이이오의 드립을 진짜 좋아합니다.. 웃긴 말 많이 해주세요😭 저희 크루가 애정 표현은 많이 없으나 그 어떤 러너들보다도 멘토님을 애정하고 있을 겁니다!!! 저희의 참스승이 되어주셔서 감사합니다! 이번 년도 많이 놀러다냐요! 윗 올리비아와 귀요미 바미파도 😍🙏🙏(자주 보고싶어요 귀요미들..)"
-      },
-      {
-        name: "마치",
-        team: "",
-        message: "리이오~~ 제 멘토가 리이오라 너무 다행이에요. 항상 세심하게 조언해주셔서 많이 배우고 있습니다! 덕분에 올 한 해 포항에서 의미있는 시간을 보내며 성장할 수 있을 것 같아요. 그만큼 저도 더 열심히 해보겠습니다~! 멘토링을 받을 때마다 아카데미에 오길 잘했다는 생각이 들어요. 늘 챙겨주셔서 감사합니다. 리이오 짱!!! ♡"
-      },
-      {
-        name: "카야",
-        team: "",
-        message: "리이오! 항상 저희의 고민을 함께 진지하게 고민해 주시구 갈피를 단단히 잡아주셔서 정말 많은 도움이 됐어요!! 리이오와 대화를 하고 나면 새로운 시각이 열리는 기분이라 항상 신기하면서도 감사합니다! 저희 크루 앞으로도 잘 부탁드려요 ㅎㅎ"
-      },
-      {
-        name: "예티",
-        team: "",
-        message: "리이오의 크루원이 되어서 정말 기뻐요~! 덕분에 여기저기 놀러다니며 추억도 많이 쌓고, 귀여운 바미와 파도의 무럭무럭 성장도 함께 지켜볼 수 있어 행복합니다. 앞으로 제 성장도 잘 지켜봐주세요! 리이오의 재능과 능력을 더 많이 배워나가겠습니다!!"
-      },
-      {
-        name: "Han",
-        team: "",
-        message: "리이오 항상 도전해보라고 밀어주시고 진짜 학습이 무엇인지 알려주셔서 감사합니다. 리이오 덕분에 이 곳에서의 도전과 실패를 두려워하지 않을 수 있게 되었어요. 진정한 가르침에 감사드립니다. 앞으로도 잘 부탁드립니다!"
-      },
-      {
-        name: "레미",
-        team: "",
-        message: "안녕하세요 리이오! 아카데미 시작한지 얼마 안된거같은데 어느새 3개월차에 다다르고 있네요. 덕분에 지금까지 퍼스널크루와도 재미있게 지내면서 아카데미 생활 이어가고 있는 것 같아요!\n그리고 멘토링때 해주셨던 조언들이 아직도 계속 리마인드 되면서 좋은 쪽으로 이어져나가고 있어요. 앞으로도 궁금한 것 있으면 편하개 물어보러 가겠습니다ㅎㅎ 그동안 너무 감사했고 앞으로도 쭉 잘 부탁드림다^^7\n이번에 같이 여행가지 못한건 아쉽지만 다음번에 기회가 있겠죠. 출장 잘 다녀오시고 스승의 은혜 다시 한번 감사드려요!"
-      },
-      {
-        name: "다나",
-        team: "",
-        message: "리이오 크루로 아카데미를 시작하게 되어 매일매일 너무 재밌게 보내고 있습니다! 저희 크루가 다른 러너들 사이에서도 아주 유명하더라고요 ㅋㅋ 엄청나게 끈끈하다고 ㅎㅎ\n\n저도 크루원들이랑 사이도 너무 좋고, 러너들끼리뿐만 아니라 리이오, 바미, 파도, 올리비아까지 같이 자주 보면서 더 돈독해지고 애정이 생기는 것 같습니다. 리이오가 처음부터 너무 유쾌하게 분위기를 만들어주시고, 저희가 자연스럽게 친해질 수 있도록 이끌어주신 덕분에 아카데미에 더 빠르게 적응하고 편안하게 지낼 수 있었던 것 같아요.\n\n그리고 크루가 친하고 즐거운 것과는 별개로, 리이오에게 멘토링을 받을 때마다 항상 생각해볼 거리가 많아져서 저 스스로도 많이 성장하는 것 같아요. 제가 질문을 가져가면 항상 역으로 질문을 두 배로 던져주시는 리이오 ㅎㅎ 처음에는 더 고민이 많아지는 것 같기도 하지만, 리이오의 질문에 스스로 답을 찾아가다 보면 어느새 제가 가지고 있던 고민도 조금씩 정리되는 것 같습니다.\n\n바로 답이 나오지 않더라도, 어떤 방향으로 더 생각해보면 좋을지 알게 되고, 제 생각을 더 깊게 들여다볼 수 있게 도와주셔서 항상 감사해요. 단순히 답을 알려주시는 게 아니라 제가 직접 고민하고 선택할 수 있게 이끌어주시는 멘토링이어서 더 오래 기억에 남는 것 같습니다.\n\n남은 시간 동안에도 리이오 크루 안에서 크루원들이랑 재미있게 놀고, 바다도 가고 여행도 가면서 즐거운 추억을 많이 만들고 싶습니다~저희 나중에 또 양념갈비 같이 꼭 먹어요 ㅎㅎ\n하늘같은 스승의 은혜…리이오의 은혜… 리이오크루 화이팅!!!"
-      },
-      {
-        name: "원",
-        team: "",
-        message: "리이오 안녕하세요! 원입니다 유독 저희 퍼스널이 다른 퍼스널보다 든든한게 리이오가 좀더 모일수 있는 기회도 많이 제공해주고 도와주셔서 인거같아요!\n저도 여기와서 기술외에도 인간그 자체로 성장해나가고 있다고 생각을 하는데 그게 리이오를 보면서 배울점을 키워나가는 부분도 있다고 생각합니다.\n경주여행도 너무나 재밌었고 바베큐장 초대도 너무 감사했어요. 고기를 제가 좀 늦게 구워서 많이 못드시고 들어간거 같아서 마음이 쓰였습니다. 다음에 꼭 한번더 야무지게 파티열면 좋을거 같아요.\n말레이시아 몸 조심히 잘 다녀오시고 기술적인 부분이든, 인간자체의 성장으로든 많이 찾아뵙고 얘기 나눠 보고싶습니다 리이오! 센세! 아자스!"
-      }
-    ];
-
-    const placeholderMessages = [
-      {
-        name: "이름 입력 예정",
-        team: "학급/소속",
-        message: "선생님께 전하고 싶은 감사 메시지가 이곳에 들어갑니다. 나중에 JSON 또는 CSV로 이름과 내용을 업로드할 수 있습니다."
-      },
-      {
-        name: "이름 입력 예정",
-        team: "학급/소속",
-        message: "수업 시간에 기억에 남았던 순간, 고마웠던 말, 선생님 덕분에 배운 점을 적는 칸입니다."
-      },
-      {
-        name: "이름 입력 예정",
-        team: "학급/소속",
-        message: "아직 내용이 없어도 전체 디자인을 먼저 볼 수 있도록 예시 문구를 넣어두었습니다."
-      },
-      {
-        name: "이름 입력 예정",
-        team: "학급/소속",
-        message: "메시지가 길어지면 카드 안에서 자연스럽게 줄바꿈됩니다. 인쇄 전 글자 길이만 한 번 확인하면 됩니다."
-      },
-      {
-        name: "이름 입력 예정",
-        team: "학급/소속",
-        message: "선생님, 늘 따뜻하게 알려주셔서 감사합니다. 이 문장은 업로드 데이터로 교체됩니다."
-      },
-      {
-        name: "이름 입력 예정",
-        team: "학급/소속",
-        message: "함께 적은 롤링페이퍼가 한 장의 추억으로 남도록 흑백 픽셀 노트 스타일로 구성했습니다."
-      },
-      {
-        name: "이름 입력 예정",
-        team: "학급/소속",
-        message: "각 카드의 이름표에는 작성자와 반 또는 팀 이름이 함께 들어갑니다."
-      },
-      {
-        name: "이름 입력 예정",
-        team: "학급/소속",
-        message: "내용 업로드 전에는 이 예시 카드들이 자리 잡기용으로 표시됩니다."
-      }
-    ];
-
-    const layoutSlots = [
-      { left: 21, topPx: 250, width: 34, height: 12, rotate: -0.6 },
-      { left: 59, topPx: 361, width: 34, height: 12, rotate: 0.5 },
-      { left: 6, topPx: 600, width: 42, height: 12, rotate: -0.3 },
-      { left: 55, topPx: 710, width: 36, height: 11, rotate: 0.4 },
-      { left: 17, topPx: 950, width: 34, height: 11, rotate: 0.6 },
-      { left: 60, topPx: 990, width: 33, height: 10, rotate: -0.4 },
-      { left: 7, topPx: 1230, width: 34, height: 10, rotate: -0.2 },
-      { left: 56, topPx: 1490, width: 34, height: 10, rotate: 0.4 }
-    ];
-
-    const compactSlots = [
-      { left: 5, top: 20, width: 35, height: 11, rotate: -0.4 },
-      { left: 60, top: 20, width: 35, height: 11, rotate: 0.3 },
-      { left: 5, top: 34, width: 35, height: 11, rotate: 0.3 },
-      { left: 60, top: 34, width: 35, height: 11, rotate: -0.3 },
-      { left: 5, top: 48, width: 35, height: 11, rotate: -0.2 },
-      { left: 60, top: 48, width: 35, height: 11, rotate: 0.4 },
-      { left: 5, top: 62, width: 35, height: 11, rotate: 0.2 },
-      { left: 60, top: 62, width: 35, height: 11, rotate: -0.3 },
-      { left: 5, top: 76, width: 35, height: 11, rotate: -0.1 },
-      { left: 60, top: 76, width: 35, height: 11, rotate: 0.2 }
-    ];
-
-    const messagesEl = document.querySelector("#messages");
-    const uploadEl = document.querySelector("#dataUpload");
-    const posterEl = document.querySelector(".poster");
-    const bottomBandEl = document.querySelector(".bottom-band");
-    let currentMessages = filledMessages;
-    let resizeTimer;
-
-    function escapeHtml(value) {
-      return String(value ?? "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-    }
-
-    function normalizeItem(item, index) {
-      const name = item.name ?? item.이름 ?? item.author ?? item.작성자 ?? `작성자 ${index + 1}`;
-      const team = item.team ?? item.소속 ?? item.class ?? item.반 ?? item.group ?? "";
-      const message = item.message ?? item.내용 ?? item.content ?? item.text ?? item.메시지 ?? "";
-
-      return {
-        name: String(name).trim() || `작성자 ${index + 1}`,
-        team: String(team).trim(),
-        message: String(message).trim() || "메시지를 입력해 주세요."
-      };
-    }
-
-    function buildDisplayMessages(items) {
-      if (items.length >= BASE_CARD_COUNT) {
-        return items;
-      }
-
-      return [
-        ...items,
-        ...placeholderMessages.slice(0, BASE_CARD_COUNT - items.length)
-      ];
-    }
-
-    function updatePosterLength(items) {
-      if (!posterEl) {
-        return;
-      }
-
-      posterEl.style.minHeight = "";
-
-      const total = items.length;
-      const extraCount = Math.max(0, total - BASE_CARD_COUNT);
-
-      if (extraCount === 0) {
-        return;
-      }
-
-      const longTextLoad = items.reduce((sum, item) => {
-        return sum + Math.max(0, item.message.length - 220);
-      }, 0);
-      const longTextRows = Math.ceil(longTextLoad / 320);
-
-      const isMobile = window.matchMedia("(max-width: 760px)").matches;
-      if (isMobile) {
-        posterEl.style.minHeight = `${2200 + Math.max(0, total - 9) * 210 + longTextRows * 160}px`;
-        return;
-      }
-
-      const baseHeight = posterEl.getBoundingClientRect().height;
-      const extraRows = Math.ceil(extraCount / 2);
-      posterEl.style.minHeight = `${baseHeight + extraRows * 230 + longTextRows * 220}px`;
-    }
-
-    function ensurePosterFitsCards() {
-      if (!posterEl || !bottomBandEl || !messagesEl) {
-        return;
-      }
-
-      for (let pass = 0; pass < 5; pass += 1) {
-        const posterRect = posterEl.getBoundingClientRect();
-        const bottomBandRect = bottomBandEl.getBoundingClientRect();
-        const notes = [...messagesEl.querySelectorAll(".note")];
-        const lowestCardBottom = notes.reduce((maxBottom, note) => {
-          return Math.max(maxBottom, note.getBoundingClientRect().bottom);
-        }, posterRect.top);
-
-        const bottomGap = window.matchMedia("(max-width: 760px)").matches ? 130 : 46;
-        const neededHeight = Math.ceil(
-          lowestCardBottom - posterRect.top + bottomBandRect.height + bottomGap
-        );
-
-        if (neededHeight <= posterRect.height + 2) {
-          break;
-        }
-
-        posterEl.style.minHeight = `${neededHeight}px`;
-      }
-    }
-
-    function getSlot(index) {
-      if (index < layoutSlots.length) {
-        return layoutSlots[index];
-      }
-
-      const extraIndex = index - layoutSlots.length;
-      const row = Math.floor(extraIndex / 2);
-      const col = extraIndex % 2;
-      return {
-        left: col === 0 ? 12 : 58,
-        topPx: (col === 0 ? 1680 : 1840) + row * (col === 0 ? 290 : 400),
-        width: 35,
-        height: 11,
-        rotate: col === 0 ? -0.2 : 0.3
-      };
-    }
-
-    function layoutMobileNotes() {
-      if (!window.matchMedia("(max-width: 760px)").matches || !messagesEl) {
-        return;
-      }
-
-      let nextTop = 135;
-      const gap = 28;
-      messagesEl.querySelectorAll(".note").forEach((note) => {
-        note.style.setProperty("--mobile-top", `${nextTop}px`);
-        nextTop += note.getBoundingClientRect().height + gap;
-      });
-    }
-
-    function renderMessages(items) {
-      currentMessages = items;
-      const displayItems = buildDisplayMessages(items);
-      const normalized = displayItems.map(normalizeItem);
-      updatePosterLength(normalized);
-      messagesEl.innerHTML = "";
-
-      normalized.forEach((item, index) => {
-        const slot = getSlot(index);
-        const note = document.createElement("article");
-        note.className = "note";
-        note.style.left = `${slot.left}%`;
-        note.style.top = slot.topPx ? `${slot.topPx}px` : `${slot.top}%`;
-        note.style.setProperty("--w", `${slot.width}%`);
-        note.style.setProperty("--h", slot.topPx ? `${slot.height * 20}px` : `${slot.height}%`);
-        note.style.setProperty("--r", `${slot.rotate}deg`);
-        note.style.setProperty("--mobile-top", `${70 + index * 210}px`);
-
-        const label = item.team ? `${item.name}, ${item.team}` : item.name;
-
-        note.innerHTML = `
-          <div class="note-titlebar">
-            <span>NEW MESSAGE</span>
-            <i class="close" aria-hidden="true"></i>
-          </div>
-          <div class="note-body">
-            <div class="message">
-              <strong class="name-tag">${escapeHtml(label)}</strong>
-              <p>${escapeHtml(item.message)}</p>
-            </div>
-            <div class="scrollbar" aria-hidden="true"></div>
-          </div>
-        `;
-
-        messagesEl.appendChild(note);
-      });
-
-      layoutMobileNotes();
-      ensurePosterFitsCards();
-    }
-
-    function parseCsv(text) {
-      const rows = [];
-      let cell = "";
-      let row = [];
-      let quoted = false;
-
-      for (let i = 0; i < text.length; i += 1) {
-        const char = text[i];
-        const next = text[i + 1];
-
-        if (char === '"' && quoted && next === '"') {
-          cell += '"';
-          i += 1;
-        } else if (char === '"') {
-          quoted = !quoted;
-        } else if (char === "," && !quoted) {
-          row.push(cell.trim());
-          cell = "";
-        } else if ((char === "\n" || char === "\r") && !quoted) {
-          if (char === "\r" && next === "\n") {
-            i += 1;
-          }
-          row.push(cell.trim());
-          if (row.some(Boolean)) {
-            rows.push(row);
-          }
-          row = [];
-          cell = "";
-        } else {
-          cell += char;
-        }
-      }
-
-      row.push(cell.trim());
-      if (row.some(Boolean)) {
-        rows.push(row);
-      }
-
-      if (rows.length === 0) {
-        return [];
-      }
-
-      const headers = rows[0].map((header) => header.trim());
-      return rows.slice(1).map((values) => {
-        const item = {};
-        headers.forEach((header, index) => {
-          item[header] = values[index] ?? "";
-        });
-        return item;
-      });
-    }
-
-    async function handleUpload(event) {
-      const file = event.target.files?.[0];
-      if (!file) {
-        return;
-      }
-
-      const text = await file.text();
-      const ext = file.name.split(".").pop().toLowerCase();
-      let data;
-
-      try {
-        if (ext === "json") {
-          const parsed = JSON.parse(text);
-          data = Array.isArray(parsed) ? parsed : parsed.messages;
-        } else {
-          data = parseCsv(text);
-        }
-
-        if (!Array.isArray(data) || data.length === 0) {
-          throw new Error("업로드할 메시지 배열을 찾지 못했습니다.");
-        }
-
-        renderMessages(data);
-      } catch (error) {
-        alert(`업로드 파일을 읽지 못했습니다.\n${error.message}`);
-      }
-    }
-
-    if (uploadEl) {
-      uploadEl.addEventListener("change", handleUpload);
-    }
-
-    window.addEventListener("resize", () => {
-      window.clearTimeout(resizeTimer);
-      resizeTimer = window.setTimeout(() => {
-        renderMessages(currentMessages);
-      }, 120);
-    });
-
-    renderMessages(filledMessages);
-  </script>
 </body>
 </html>
